@@ -1,0 +1,38 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import { company } from '../data/site';
+export function getStaticPaths() { return [{ params:{ policy:'privacy-policy' } }, { params:{ policy:'terms-and-conditions' } }]; }
+const privacy = Astro.params.policy === 'privacy-policy';
+const title = privacy ? 'Privacy Policy' : 'Terms & Conditions';
+const desc = privacy ? 'How information is handled when you browse the Techinfra website and choose a direct enquiry channel.' : 'Information about using the Techinfra website, its representative imagery and the scope of service descriptions.';
+const sections = privacy ? [
+  ['Browsing this website','The public pages describe Techinfra’s services. You can browse them without an account. The site serves its images and fonts locally.'],
+  ['Contacting Techinfra','Calling opens your device’s dialer. A WhatsApp enquiry opens WhatsApp with suggested text that you can edit before sending. The enquiry planner on the contact page prepares a WhatsApp message or email on your device; this website does not store or transmit what you type. The information you choose to share may include your contact details, facility type and project requirements.'],
+  ['External communications','Your telephone provider, email provider and WhatsApp handle communications through their respective services. Their privacy terms apply when you use those channels.'],
+  ['Privacy enquiries','For questions about information you have shared with Techinfra, contact the company at ' + company.email + '.'],
+] : [
+  ['Website information','This website introduces the services of ' + company.name + '. Service descriptions provide a starting point for a discussion about your facility.'],
+  ['Project scope','Site conditions, technical specifications, costs and delivery arrangements require a separate discussion and agreement with Techinfra. Submitting an enquiry does not place an order.'],
+  ['Representative imagery','Images on this website illustrate infrastructure types and technology applications. The Solutions Gallery uses representative imagery. A depicted building or installation does not identify a client engagement.'],
+  ['Enquiries and external services','Phone, email and WhatsApp links open external communication services. Please contact Techinfra directly to confirm requirements before making project decisions.'],
+];
+---
+<Layout title={title + ' | Techinfra'} description={desc} crumbs={[[title, '/' + Astro.params.policy + '/']]}>
+  <section class="phero policy-hero">
+    <div class="phero__grid-bg" aria-hidden="true"></div>
+    <div class="container policy-hero__in">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><Icon name="next" size={14}/><span aria-current="page">{title}</span></nav>
+      <h1>{title}</h1>
+      <p class="phero__lead">{desc}</p>
+    </div>
+  </section>
+  <article class="section">
+    <div class="container reading">
+      <p class="review-note">Draft for company review before publication.</p>
+      {sections.map(([h, p], i) => <section><span class="reading__num num">0{i + 1}</span><div><h2>{h}</h2><p>{p}</p></div></section>)}
+      <div class="reading__cta"><Button href="/contact-us/">Contact Techinfra</Button></div>
+    </div>
+  </article>
+</Layout>

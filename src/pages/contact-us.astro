@@ -1,0 +1,146 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Button from '../components/Button.astro';
+import Select from '../components/Select.astro';
+import { company, whatsapp, mailto, services, sectors } from '../data/site';
+const crumbs = [['Contact Us', '/contact-us/']];
+---
+<Layout title="Contact Techinfra | Infrastructure Enquiries" description="Call, WhatsApp or email Techinfra to discuss requirements for your building’s fire safety, CCTV, BMS, communications or renewable energy systems." image="contact-lobby-1536" crumbs={crumbs}>
+  <PageHero tag="Get in Touch" title="Let’s Discuss Your Infrastructure Requirements" text="Connect with Techinfra to discuss fire safety, security, building technology and renewable energy solutions." image="contact-lobby" crumbs={crumbs}>
+    <Button href={'tel:' + company.dial} icon="phone">Call Now</Button>
+    <Button href={whatsapp()} tone="whatsapp" icon="whatsapp">Enquire on WhatsApp</Button>
+  </PageHero>
+
+  <section class="section contact">
+    <div class="container contact__grid">
+      <div class="contact__info">
+        <p class="eyebrow">Contact Us</p>
+        <h2>{company.name}</h2>
+        <p class="contact__intro">Share the type of facility, the systems you are considering and any existing equipment you would like to integrate.</p>
+        <div class="methods">
+          <a class="method reveal" href={'tel:' + company.dial}>
+            <span class="method__icon"><Icon name="phone" size={24}/></span>
+            <span><small>Talk to Techinfra</small><strong class="num">{company.phone}</strong></span>
+            <span class="method__go"><Icon name="arrow" size={18}/></span>
+          </a>
+          <a class="method method--wa reveal" style="--i:1" href={whatsapp()} target="_blank" rel="noopener">
+            <span class="method__icon"><Icon name="whatsapp" size={26}/></span>
+            <span><small>Start a conversation</small><strong>Open a prepared WhatsApp enquiry</strong></span>
+            <span class="method__go"><Icon name="external" size={18}/></span>
+          </a>
+          <a class="method reveal" style="--i:2" href={mailto()}>
+            <span class="method__icon"><Icon name="mail" size={24}/></span>
+            <span><small>Company email</small><strong>{company.email}</strong></span>
+            <span class="method__go"><Icon name="arrow" size={18}/></span>
+          </a>
+        </div>
+        <div class="prep">
+          <h3>What helps us prepare</h3>
+          <ul>
+            {services.map((s) => <li style={`--accent:${s.color}`}><span class="prep__icon"><Icon name={s.icon} size={18}/></span><div><strong>{s.label}</strong><p>{s.discuss}</p></div></li>)}
+          </ul>
+        </div>
+      </div>
+
+      <form class="enquiry reveal" id="enquiry" novalidate>
+        <div class="enquiry__head">
+          <span class="enquiry__badge"><Icon name="send" size={20}/></span>
+          <div><h2>Plan your enquiry</h2><p>Fill in a few details and send them to us on WhatsApp or by email. Nothing is stored on this website.</p></div>
+        </div>
+        <div class="enquiry__grid">
+          <div class="field">
+            <label class="field__label" for="f-name">Your name<span class="field__req" aria-hidden="true">*</span></label>
+            <input class="field__input" id="f-name" name="name" type="text" autocomplete="name" required maxlength="80" aria-describedby="f-name-error"/>
+            <p class="field__error" id="f-name-error" hidden>Please enter your name.</p>
+          </div>
+          <div class="field">
+            <label class="field__label" for="f-org">Organisation <span class="field__opt">(optional)</span></label>
+            <input class="field__input" id="f-org" name="organisation" type="text" autocomplete="organization" maxlength="100"/>
+          </div>
+          <Select id="f-service" name="service" label="Service of interest" placeholder="Choose a service" required icon="layers"
+            options={[...services.map((s) => s.name), 'Multiple systems / not sure yet']}/>
+          <Select id="f-sector" name="sector" label="Facility type" placeholder="Choose a sector" icon="building"
+            options={[...sectors.map((s) => s.name), 'Other']}/>
+          <div class="field field--full">
+            <label class="field__label" for="f-msg">Your requirements<span class="field__req" aria-hidden="true">*</span></label>
+            <textarea class="field__input" id="f-msg" name="message" rows="5" required maxlength="1200" aria-describedby="f-msg-error" placeholder="Building use, areas involved and any existing systems…"></textarea>
+            <p class="field__error" id="f-msg-error" hidden>Please describe your requirements.</p>
+          </div>
+        </div>
+        <div class="enquiry__actions">
+          <button class="btn btn--whatsapp btn--lg" type="submit" data-channel="whatsapp"><span class="btn__label">Send on WhatsApp</span><span class="btn__icon"><Icon name="whatsapp" size={20}/></span></button>
+          <button class="btn btn--outline btn--lg" type="submit" data-channel="email"><span class="btn__label">Send by Email</span><span class="btn__icon"><Icon name="mail" size={18}/></span></button>
+        </div>
+        <p class="enquiry__status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import { initSelects } from '../scripts/select';
+  import { company } from '../data/site';
+  initSelects();
+
+  const form = document.querySelector<HTMLFormElement>('#enquiry')!;
+  const status = form.querySelector<HTMLElement>('.enquiry__status')!;
+  let channel = 'whatsapp';
+  form.querySelectorAll<HTMLButtonElement>('[data-channel]').forEach((b) => b.addEventListener('click', () => { channel = b.dataset.channel!; }));
+
+  const setError = (field: HTMLElement, control: HTMLElement, show: boolean): void => {
+    field.classList.toggle('has-error', show);
+    control.toggleAttribute('aria-invalid', show);
+    const msg = field.querySelector<HTMLElement>('.field__error');
+    if (msg) msg.hidden = !show;
+  };
+
+  form.addEventListener('input', (e) => {
+    const el = e.target as HTMLInputElement;
+    if (el.value.trim()) setError(el.closest('.field')!, el, false);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const value = (k: string): string => String(data.get(k) ?? '').trim();
+    let firstInvalid: HTMLElement | null = null;
+
+    for (const id of ['f-name', 'f-msg']) {
+      const el = form.querySelector<HTMLInputElement>('#' + id)!;
+      const bad = !el.value.trim();
+      setError(el.closest('.field')!, el, bad);
+      if (bad && !firstInvalid) firstInvalid = el;
+    }
+    const svcRoot = form.querySelector<HTMLElement>('#f-service')!.closest<HTMLElement>('.field')!;
+    const svcBtn = svcRoot.querySelector<HTMLElement>('.select__btn')!;
+    const svcBad = !value('service');
+    setError(svcRoot, svcBtn, svcBad);
+    if (svcBad && !firstInvalid) firstInvalid = svcBtn;
+
+    if (firstInvalid) {
+      status.textContent = 'Please complete the highlighted fields.';
+      status.className = 'enquiry__status is-error';
+      firstInvalid.focus();
+      return;
+    }
+
+    const details = [
+      ['Name', value('name')],
+      ['Organisation', value('organisation')],
+      ['Service', value('service')],
+      ['Facility type', value('sector')],
+    ].filter(([, v]) => v).map(([k, v]) => k + ': ' + v);
+    const text = ['Hello Techinfra, I would like to discuss my infrastructure requirements.', '', ...details, '', 'Requirements: ' + value('message')].join('\n');
+
+    if (channel === 'email') {
+      window.location.href = 'mailto:' + company.email + '?subject=' + encodeURIComponent('Enquiry: ' + value('service')) + '&body=' + encodeURIComponent(text);
+      status.textContent = 'Your email app should open with the enquiry ready to send.';
+    } else {
+      window.open('https://wa.me/' + company.dial.slice(1) + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
+      status.textContent = 'WhatsApp has opened with your enquiry. Review it and press send.';
+    }
+    status.className = 'enquiry__status is-ok';
+  });
+</script>

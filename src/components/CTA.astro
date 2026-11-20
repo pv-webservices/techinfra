@@ -1,0 +1,27 @@
+---
+import Button from './Button.astro';
+import { company, whatsapp } from '../data/site';
+interface Props { heading?:string; text?:string; topic?:string }
+const {
+  heading = 'Let’s Build Safer, Smarter & More Sustainable Spaces Together.',
+  text = 'Tell us about your facility and the systems you are considering. We will help you plan the right combination.',
+  topic,
+} = Astro.props;
+---
+<section class="cta" aria-labelledby="cta-title">
+  <div class="cta__bg" aria-hidden="true">
+    <img src="/media/cta-city-1024.webp" srcset="/media/cta-city-640.webp 640w, /media/cta-city-1024.webp 1024w, /media/cta-city-1536.webp 1536w" sizes="100vw" alt="" width="1536" height="1024" loading="lazy" decoding="async" data-parallax/>
+  </div>
+  <div class="container cta__in reveal">
+    <div class="cta__copy">
+      <p class="eyebrow eyebrow--light">Start the conversation</p>
+      <h2 id="cta-title">{heading}</h2>
+      <p>{text}</p>
+    </div>
+    <div class="cta__actions">
+      <Button href="/contact-us/" size="lg">Get in Touch Today</Button>
+      <Button href={whatsapp(topic)} tone="whatsapp" icon="whatsapp" size="lg">Chat on WhatsApp</Button>
+      <a class="cta__call" href={'tel:' + company.dial}><span>Or call</span> <strong class="num">{company.phone}</strong></a>
+    </div>
+  </div>
+</section>

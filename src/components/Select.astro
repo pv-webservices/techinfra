@@ -1,0 +1,24 @@
+---
+// Themed, accessible single-select (listbox pattern). The chosen value is stored in a
+// hidden input so the surrounding form can read it like a native control.
+import Icon from './Icon.astro';
+interface Props { id:string; name:string; label:string; placeholder:string; options:string[]; required?:boolean; icon?:string }
+const { id, name, label, placeholder, options, required=false, icon } = Astro.props;
+---
+<div class="field select" data-select>
+  <span class="field__label" id={id + '-label'}>{label}{required && <span class="field__req" aria-hidden="true">*</span>}</span>
+  <input type="hidden" name={name} value="" data-required={required ? '' : undefined}/>
+  <button type="button" class="select__btn" id={id} aria-haspopup="listbox" aria-expanded="false" aria-controls={id + '-list'} aria-labelledby={`${id}-label ${id}`}>
+    {icon && <span class="select__lead"><Icon name={icon} size={18}/></span>}
+    <span class="select__value is-placeholder" data-value-label>{placeholder}</span>
+    <span class="select__chev"><Icon name="down" size={18}/></span>
+  </button>
+  <ul class="select__list" id={id + '-list'} role="listbox" tabindex="-1" aria-labelledby={id + '-label'} hidden>
+    {options.map((o, i) => (
+      <li class="select__opt" role="option" id={`${id}-opt-${i}`} aria-selected="false" data-value={o}>
+        <span>{o}</span><Icon name="check" size={18}/>
+      </li>
+    ))}
+  </ul>
+  <p class="field__error" id={id + '-error'} hidden>Please choose an option.</p>
+</div>

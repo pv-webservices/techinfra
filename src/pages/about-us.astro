@@ -1,0 +1,79 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import ServiceCards from '../components/ServiceCards.astro';
+import SectorSlider from '../components/SectorSlider.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import Img from '../components/Img.astro';
+import CTA from '../components/CTA.astro';
+import { company, approach, strengths, facts } from '../data/site';
+const crumbs = [['About Us', '/about-us/']];
+---
+<Layout title="About Techinfra | Integrated Infrastructure Solutions" description="Learn how Techinfra approaches building safety, security, connected technology and sustainable energy across four industry sectors." image="team-site-1024" crumbs={crumbs}>
+  <PageHero tag="About Techinfra" title="Engineering Safer, Smarter Infrastructure" text="An integrated approach to the systems that protect people, connect spaces and power modern buildings." image="team-site" portrait crumbs={crumbs}>
+    <Button href="/contact-us/">Get in Touch</Button>
+    <Button href="/services/" tone="ghost">Our Services</Button>
+  </PageHero>
+
+  <section class="section">
+    <div class="container overview">
+      <div class="overview__head reveal">
+        <p class="eyebrow">Company Overview</p>
+        <h2>One facility. Many working systems.</h2>
+      </div>
+      <div class="overview__body reveal">
+        <p class="overview__lead">{company.name} brings fire and life safety, surveillance, building technology and renewable energy into the same infrastructure conversation.</p>
+        <p>A security team needs visibility at an entrance. A facilities team needs to understand plant conditions. A seminar hall needs clear sound. We consider these needs in the context of the building they share.</p>
+        <dl class="mini-facts">{facts.map(([n, l]) => <div><dd class="num"><span data-count={n}>{n}</span></dd><dt>{l}</dt></div>)}</dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="container">
+      <div class="section-head reveal">
+        <div><p class="eyebrow">Our Integrated Approach</p><h2>From requirements to connected systems</h2></div>
+        <p>Every engagement follows the same logic: understand how the building is used, then plan the systems that serve it.</p>
+      </div>
+      <ol class="timeline">
+        {approach.map(([h, p], i) => <li class="timeline__item reveal" style={`--i:${i}`}><span class="timeline__num num">0{i + 1}</span><h3>{h}</h3><p>{p}</p></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-wide">
+      <div class="section-head reveal">
+        <div><p class="eyebrow">What We Do</p><h2>Four areas of expertise</h2></div>
+        <p>Specialist disciplines that share cabling routes, control rooms and operators — and work best when they are planned together.</p>
+      </div>
+      <ServiceCards/>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="container about-why">
+      <figure class="about-why__media reveal"><Img name="engineer" sizes="(max-width: 860px) 100vw, 45vw"/></figure>
+      <div>
+        <p class="eyebrow reveal">Why Techinfra</p>
+        <h2 class="reveal">A reliable partner for integrated infrastructure</h2>
+        <ul class="tiles">
+          {strengths.map(([icon, h, p], i) => <li class="tile reveal" style={`--i:${i}`}><span class="tile__icon"><Icon name={icon} size={22}/></span><h3>{h}</h3><p>{p}</p></li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--navy">
+    <div class="container-wide">
+      <div class="section-head section-head--light reveal">
+        <div><p class="eyebrow eyebrow--light">Our Industry Focus</p><h2>Sectors we serve</h2></div>
+        <p>From public buildings to five-star hospitality, the use of each space shapes the systems it needs.</p>
+      </div>
+      <SectorSlider/>
+    </div>
+  </section>
+
+  <CTA heading="Discuss Your Infrastructure Requirements"/>
+</Layout>

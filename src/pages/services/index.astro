@@ -1,0 +1,59 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Img from '../../components/Img.astro';
+import Icon from '../../components/Icon.astro';
+import Button from '../../components/Button.astro';
+import SystemsMarquee from '../../components/SystemsMarquee.astro';
+import CTA from '../../components/CTA.astro';
+import { services, servicePath, whatsapp } from '../../data/site';
+const crumbs = [['Services', '/services/']];
+---
+<Layout title="Infrastructure Services | Techinfra" description="Explore Techinfra’s four service areas, from fire detection and CCTV to connected building systems, AV and commercial solar power." image="svc-bms-1536" crumbs={crumbs}>
+  <PageHero title="Integrated Solutions for Modern Infrastructure" tag="Our Services" text="Explore the four service areas that bring safety, security, building operations and energy planning together." mosaic={services.map((s) => s.heroImage)} crumbs={crumbs}>
+    <Button href="/contact-us/">Request a Consultation</Button>
+  </PageHero>
+
+  <nav class="jump" aria-label="Jump to a service">
+    <div class="container jump__in">
+      {services.map((s) => <a href={'#' + s.slug} style={`--accent:${s.color}`}><Icon name={s.icon} size={18}/>{s.label}</a>)}
+    </div>
+  </nav>
+
+  <div class="container rows">
+    {services.map((s, i) => (
+      <section class="row" id={s.slug} style={`--accent:${s.color}`} aria-labelledby={s.slug + '-title'}>
+        <div class="row__media reveal">
+          <Img name={s.heroImage} sizes="(max-width: 860px) 100vw, 50vw"/>
+          <span class="row__index num">0{i + 1}</span>
+        </div>
+        <div class="row__body reveal">
+          <span class="row__icon"><Icon name={s.icon} size={24}/></span>
+          <h2 id={s.slug + '-title'}>{s.name}</h2>
+          <p class="row__lead">{s.intro}</p>
+          <p>{s.context}</p>
+          <ul class="checks">{s.scope.map(([label]) => <li><Icon name="check" size={16}/>{label}</li>)}</ul>
+          <div class="row__actions">
+            <Button href={servicePath(s)} tone="navy">Explore this service</Button>
+            <Button href={whatsapp(s.name.toLowerCase())} tone="link" icon="whatsapp">Enquire on WhatsApp</Button>
+          </div>
+        </div>
+      </section>
+    ))}
+  </div>
+
+  <SystemsMarquee/>
+
+  <section class="section section--tint">
+    <div class="container overview">
+      <div class="overview__head reveal"><p class="eyebrow">Industry Applications</p><h2>Plan around the building</h2></div>
+      <div class="overview__body reveal">
+        <p class="overview__lead">A change to an entrance can affect camera coverage, access control and occupant announcements.</p>
+        <p>Planning these requirements together helps identify shared spaces, cabling routes and operator needs.</p>
+        <Button href="/sectors/" tone="link">Explore the sectors we serve</Button>
+      </div>
+    </div>
+  </section>
+
+  <CTA heading="Request a Solution Consultation"/>
+</Layout>

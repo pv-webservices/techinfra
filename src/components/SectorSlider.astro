@@ -1,0 +1,25 @@
+---
+import { sectors, services } from '../data/site';
+import Img from './Img.astro';
+import Icon from './Icon.astro';
+---
+<div class="sector-slider" data-slider>
+  <div class="sector-track" data-track>
+    {sectors.map((s, i) => (
+      <a class="sector-card reveal" href={'/sectors/#' + s.slug} style={`--i:${i}`}>
+        <Img name={s.image} sizes="(max-width: 760px) 82vw, 25vw"/>
+        <span class="sector-card__shade" aria-hidden="true"></span>
+        <span class="sector-card__body">
+          <span class="sector-card__icon"><Icon name={s.icon} size={22}/></span>
+          <strong>{s.name}</strong>
+          <small>{s.focus}</small>
+          <span class="sector-card__tags">{s.services.map((n) => <span style={`--accent:${services[n].color}`}><Icon name={services[n].icon} size={14}/>{services[n].label}</span>)}</span>
+        </span>
+      </a>
+    ))}
+  </div>
+  <div class="slider-ctrl slider-ctrl--mobile">
+    <button type="button" data-prev aria-label="Previous sector"><Icon name="prev" size={20}/></button>
+    <button type="button" data-next aria-label="Next sector"><Icon name="next" size={20}/></button>
+  </div>
+</div>

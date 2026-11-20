@@ -1,0 +1,13 @@
+---
+import { services, servicePath } from '../data/site';
+import Img from './Img.astro';
+import Icon from './Icon.astro';
+---
+<div class="svc-cards">
+  {services.map((s, i) => (
+    <a class="svc-card reveal" href={servicePath(s)} style={`--accent:${s.color};--i:${i}`}>
+      <div class="svc-card__media"><Img name={s.heroImage} sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 25vw"/><span class="svc-card__icon"><Icon name={s.icon} size={22}/></span></div>
+      <div class="svc-card__body"><h3>{s.name}</h3><p>{s.short}</p><span class="svc-card__go">Explore <Icon name="arrow" size={16}/></span></div>
+    </a>
+  ))}
+</div>

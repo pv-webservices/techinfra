@@ -1,0 +1,9 @@
+---
+import Icon from './Icon.astro';
+interface Props { href:string; tone?:'primary'|'navy'|'light'|'ghost'|'outline'|'whatsapp'|'link'; icon?:string|false; size?:'sm'|'md'|'lg'; external?:boolean; class?:string; label?:string }
+const { href, tone='primary', icon='arrow', size='md', external=href.startsWith('http'), class:cls='', label } = Astro.props;
+---
+<a class:list={['btn', `btn--${tone}`, `btn--${size}`, cls]} href={href} aria-label={label}
+  {...(external ? { target:'_blank', rel:'noopener' } : {})}>
+  <span class="btn__label"><slot/></span>{icon && <span class="btn__icon"><Icon name={icon} size={18}/></span>}
+</a>

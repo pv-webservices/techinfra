@@ -1,0 +1,83 @@
+{
+  "svc-fire": {
+    "model": "gpt-image-2.5-flare",
+    "quality": "high",
+    "size": "1536x1024",
+    "reason": "standard asset",
+    "purpose": "Fire & Life Safety service hero and homepage service feature",
+    "placement": "services/fire-life-safety hero, homepage services bento",
+    "generatedAt": "2026-11-20T11:22:22.451Z"
+  },
+  "hero-dusk-portrait": {
+    "model": "gpt-image-2.5-sunburst",
+    "quality": "high",
+    "size": "1024x1536",
+    "reason": "hero asset",
+    "purpose": "Homepage hero background for phones (no blur, native resolution)",
+    "placement": "src/pages/index.astro → .hero picture (≤ 760px)",
+    "generatedAt": "2026-11-20T11:22:38.534Z"
+  },
+  "hero-dusk": {
+    "model": "gpt-image-2.5-sunburst",
+    "quality": "high",
+    "size": "1536x1024",
+    "reason": "hero asset",
+    "purpose": "Homepage hero background (desktop/tablet)",
+    "placement": "src/pages/index.astro → .hero picture (≥ 761px)",
+    "generatedAt": "2026-11-20T11:22:38.862Z"
+  },
+  "svc-solar": {
+    "model": "gpt-image-2.5-flare",
+    "quality": "high",
+    "size": "1536x1024",
+    "reason": "standard asset",
+    "purpose": "Solar & Renewable Energy service hero and homepage service feature",
+    "placement": "services/solar-renewable-energy hero, homepage services bento",
+    "generatedAt": "2026-11-20T11:22:59.273Z"
+  },
+  "svc-bms": {
+    "model": "gpt-image-2.5-sunburst",
+    "quality": "high",
+    "size": "1536x1024",
+    "reason": "traits: interior, multiple-subjects, photoreal-people, complex-lighting",
+    "purpose": "BMS & Integrated Technology service hero and homepage service feature",
+    "placement": "services/bms-integrated-technology hero, homepage services bento",
+    "generatedAt": "2026-11-20T11:23:05.141Z"
+  },
+  "team-site": {
+    "model": "gpt-image-2.5-sunburst",
+    "quality": "high",
+    "size": "1024x1536",
+    "reason": "traits: multiple-people, interior, machinery",
+    "purpose": "Why Techinfra portrait feature and About page story image",
+    "placement": "homepage .why section, about-us approach section",
+    "generatedAt": "2026-11-20T11:23:14.325Z"
+  },
+  "cta-city": {
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1536x1024",
+    "reason": "standard asset",
+    "purpose": "Full-width background behind the closing call-to-action band",
+    "placement": "src/components/CTA.astro background",
+    "generatedAt": "2026-11-20T11:23:15.592Z"
+  },
+  "contact-lobby": {
+    "model": "gpt-image-2.5-flare",
+    "quality": "medium",
+    "size": "1536x1024",
+    "reason": "standard asset",
+    "purpose": "Contact page hero image",
+    "placement": "src/pages/contact-us.astro hero",
+    "generatedAt": "2026-11-20T11:23:17.581Z"
+  },
+  "svc-cctv": {
+    "model": "gpt-image-2.5-flare",
+    "quality": "high",
+    "size": "1536x1024",
+    "reason": "standard asset",
+    "purpose": "CCTV & Security service hero and homepage service feature",
+    "placement": "services/cctv-security hero, homepage services bento",
+    "generatedAt": "2026-11-20T11:24:17.881Z"
+  }
+}

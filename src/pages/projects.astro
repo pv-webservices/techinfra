@@ -1,0 +1,92 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import CTA from '../components/CTA.astro';
+import { gallery, media } from '../data/site';
+const crumbs = [['Projects', '/projects/']];
+const categories = ['All', ...new Set(gallery.map((g) => g.category))];
+---
+<Layout title="Solutions Gallery | Techinfra" description="View representative imagery of fire fighting equipment, surveillance, control rooms, solar installations and auditorium AV spaces." image="hero-dusk-1536" crumbs={crumbs}>
+  <PageHero tag="Projects · Solutions Gallery" title="Solutions in Action" text="Explore the technologies and systems behind modern infrastructure. The gallery uses representative industry imagery to illustrate each application." mosaic={['fire-manifold', 'control-room', 'solar-array', 'auditorium']} crumbs={crumbs}/>
+
+  <section class="section">
+    <div class="container">
+      <div class="gallery-bar">
+        <div><p class="eyebrow">Solutions Gallery</p><h2>Explore by technology</h2></div>
+        <div class="filters" role="group" aria-label="Filter gallery by category">
+          {categories.map((c, i) => <button type="button" data-filter={c} aria-pressed={i === 0 ? 'true' : 'false'}>{c}<span class="num">{c === 'All' ? gallery.length : gallery.filter((g) => g.category === c).length}</span></button>)}
+        </div>
+      </div>
+      <div class="pgrid">
+        {gallery.map((g, i) => (
+          <article class="pcard reveal" id={g.image} data-category={g.category} style={`--i:${i % 3}`}>
+            <a class="pcard__media" href={'/media/' + g.image + '.webp'} data-title={g.title} data-description={g.text} data-alt={media[g.image].alt} aria-label={'Preview ' + g.title}>
+              <Img name={g.image} sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 33vw"/>
+              <span class="pcard__zoom"><Icon name="expand" size={20}/></span>
+            </a>
+            <div class="pcard__body"><p class="pcard__cat">{g.category}</p><h3>{g.title}</h3><p>{g.text}</p></div>
+          </article>
+        ))}
+      </div>
+      <p class="note">Images illustrate infrastructure types and technology applications. A depicted building or installation does not identify a client engagement.</p>
+      <p class="sr" role="status" id="gallery-status"></p>
+    </div>
+  </section>
+
+  <dialog class="lightbox" id="preview" aria-labelledby="preview-title">
+    <div class="lightbox__top"><span>Solutions Gallery</span><button type="button" class="lightbox__close" aria-label="Close image preview"><Icon name="close" size={22}/></button></div>
+    <div class="lightbox__stage"><img id="preview-img" src={'/media/' + gallery[0].image + '.webp'} alt={media[gallery[0].image].alt} width="764" height="508" loading="lazy"/></div>
+    <div class="lightbox__bottom">
+      <div><h2 id="preview-title"></h2><p id="preview-caption"></p></div>
+      <div class="slider-ctrl"><button type="button" data-move="-1" aria-label="Previous image"><Icon name="prev" size={20}/></button><button type="button" data-move="1" aria-label="Next image"><Icon name="next" size={20}/></button></div>
+    </div>
+  </dialog>
+
+  <CTA/>
+</Layout>
+
+<script>
+  const filters = document.querySelector<HTMLElement>('.filters')!;
+  const entries = Array.from(document.querySelectorAll<HTMLElement>('.pcard'));
+  const status = document.querySelector<HTMLElement>('#gallery-status')!;
+  filters.addEventListener('click', (e) => {
+    const button = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-filter]');
+    if (!button) return;
+    filters.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+    entries.forEach((item) => { item.hidden = button.dataset.filter !== 'All' && item.dataset.category !== button.dataset.filter; });
+    status.textContent = entries.filter((i) => !i.hidden).length + ' images shown.';
+  });
+
+  const dialog = document.querySelector<HTMLDialogElement>('#preview')!;
+  const img = document.querySelector<HTMLImageElement>('#preview-img')!;
+  let current: HTMLAnchorElement | null = null;
+  let opener: HTMLAnchorElement | null = null;
+  const show = (link: HTMLAnchorElement): void => {
+    current = link;
+    img.src = link.href;
+    img.alt = link.dataset.alt ?? '';
+    document.querySelector('#preview-title')!.textContent = link.dataset.title ?? '';
+    document.querySelector('#preview-caption')!.textContent = link.dataset.description ?? '';
+  };
+  const move = (step: number): void => {
+    const links = entries.filter((el) => !el.hidden).map((el) => el.querySelector<HTMLAnchorElement>('a')!);
+    if (!current) return;
+    show(links[(links.indexOf(current) + step + links.length) % links.length]);
+  };
+  document.querySelectorAll<HTMLAnchorElement>('.pcard__media').forEach((link) => link.addEventListener('click', (e) => {
+    if (typeof dialog.showModal !== 'function' || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+    e.preventDefault(); opener = link; show(link); dialog.showModal();
+    document.documentElement.classList.add('drawer-open');
+  }));
+  dialog.querySelector('.lightbox__close')!.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('close', () => { document.documentElement.classList.remove('drawer-open'); opener?.focus({ preventScroll: true }); });
+  dialog.querySelectorAll<HTMLButtonElement>('[data-move]').forEach((b) => b.addEventListener('click', () => move(Number(b.dataset.move))));
+  dialog.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') move(-1); if (e.key === 'ArrowRight') move(1); });
+  dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+  // Swipe between images on touch screens.
+  let startX = 0;
+  dialog.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+  dialog.addEventListener('touchend', (e) => { const dx = e.changedTouches[0].clientX - startX; if (Math.abs(dx) > 50) move(dx < 0 ? 1 : -1); });
+</script>

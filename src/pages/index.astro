@@ -1,0 +1,182 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import Button from '../components/Button.astro';
+import Img from '../components/Img.astro';
+import ServiceBento from '../components/ServiceBento.astro';
+import SectorSlider from '../components/SectorSlider.astro';
+import SystemsMarquee from '../components/SystemsMarquee.astro';
+import CTA from '../components/CTA.astro';
+import { company, services, servicePath, gallery, approach, strengths, facts, media } from '../data/site';
+import '../styles/home.css';
+
+const values = [['shield','Safety & Security','for People & Assets'],['gear','Integrated','Technology Solutions'],['leaf','Sustainable &','Energy-Efficient Systems'],['building','Solutions for','Diverse Sectors']];
+const nodes = [['flame','Fire & Life Safety','#d3101f'],['cctv','CCTV & Security','#0a5aa8'],['monitor','BMS & Automation','#5545a6'],['access','Access Control','#0c2a54'],['audio','PA / VA & AV','#0a5aa8'],['solar','Solar & Renewables','#1f7a3d']];
+const landscape = '/media/hero-dusk-640.webp 640w, /media/hero-dusk-1024.webp 1024w, /media/hero-dusk-1536.webp 1536w';
+const portrait = '/media/hero-dusk-portrait-640.webp 640w, /media/hero-dusk-portrait-1024.webp 1024w';
+---
+<Layout
+  title="Techinfra | Fire Safety, Security, BMS & Solar Solutions"
+  description="Integrated fire safety, CCTV security, BMS, building technology and renewable energy solutions from Techinfra Integrated Solutions Pvt. Ltd."
+  preload={[
+    { href:'/media/hero-dusk-portrait-1024.webp', srcset:portrait, sizes:'100vw', media:'(max-width: 760px)' },
+    { href:'/media/hero-dusk-1536.webp', srcset:landscape, sizes:'100vw', media:'(min-width: 761px)' },
+  ]}>
+
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero__media">
+      <picture>
+        <source media="(max-width: 760px)" srcset={portrait} sizes="100vw" width="1024" height="1536"/>
+        <img src="/media/hero-dusk-1536.webp" srcset={landscape} sizes="100vw" width="1536" height="1024" alt={media['hero-dusk'].alt} fetchpriority="high" decoding="sync"/>
+      </picture>
+      <div class="hero__shade" aria-hidden="true"></div>
+    </div>
+    <div class="container hero__in">
+      <div class="hero__copy">
+        <p class="eyebrow eyebrow--light hero__kicker">Integrated Infrastructure Solutions</p>
+        <h1 id="hero-title" class="hero__title">
+          <span class="hero__line">Safer Buildings.</span>
+          <span class="hero__line"><em>Smarter</em> Operations.</span>
+          <span class="hero__line">A Sustainable Tomorrow.</span>
+        </h1>
+        <p class="hero__lead">Integrated Fire Safety, Security, BMS and Renewable Energy Solutions for Modern, Secure &amp; Future-Ready Spaces.</p>
+        <div class="hero__actions">
+          <Button href="/services/" size="lg">Explore Our Solutions</Button>
+          <Button href="/contact-us/" tone="ghost" size="lg">Contact Us</Button>
+        </div>
+        <a class="hero__phone" href={'tel:' + company.dial}><span class="hero__phone-icon"><Icon name="phone" size={18}/></span><span><small>Speak with our team</small><strong class="num">{company.phone}</strong></span></a>
+      </div>
+      <div class="orbit">
+      <svg class="orbit__arc" viewBox="0 0 200 520" preserveAspectRatio="none" aria-hidden="true"><path d="M190 0 C 40 110, 10 300, 120 520" vector-effect="non-scaling-stroke"/></svg>
+      <ul aria-label="Our service areas">
+        {services.map((s, i) => (
+          <li class={'orbit__node orbit__node--' + i} style={`--accent:${s.color};--i:${i}`}>
+            <a href={servicePath(s)}><span class="orbit__icon"><Icon name={s.icon} size={24}/></span><span class="orbit__label">{s.label}</span></a>
+          </li>
+        ))}
+      </ul>
+      </div>
+    </div>
+    <div class="hero__rail">
+      <div class="container hero__rail-in">
+        {services.map((s) => (
+          <a class="rail-item" href={servicePath(s)} style={`--accent:${s.color}`}>
+            <span class="rail-item__icon"><Icon name={s.icon} size={22}/></span>
+            <span class="rail-item__text"><strong>{s.label}</strong><small>{s.short}</small></span>
+            <span class="rail-item__arrow"><Icon name="arrow" size={16}/></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- INTRO + FACTS -->
+  <section class="intro section">
+    <div class="container intro__grid">
+      <div class="intro__copy reveal">
+        <p class="eyebrow">Who we are</p>
+        <h2>One partner for the systems that protect, connect and power your building.</h2>
+        <p>{company.name} brings fire and life safety, surveillance, building technology and renewable energy into the same infrastructure conversation — planned around the people, spaces and operations they serve.</p>
+        <Button href="/about-us/" tone="link">Know more about us</Button>
+      </div>
+      <dl class="facts reveal">
+        {facts.map(([n, label]) => <div class="fact"><dt>{label}</dt><dd class="num"><span data-count={n}>{n}</span></dd></div>)}
+      </dl>
+    </div>
+    <div class="container">
+      <ul class="values">
+        {values.map(([icon, a, b], i) => <li class="reveal" style={`--i:${i}`}><span class="values__icon"><Icon name={icon} size={26}/></span><span><strong>{a}</strong> {b}</span></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services-home section section--tint" aria-labelledby="svc-title">
+    <div class="container-wide">
+      <div class="section-head reveal">
+        <div><p class="eyebrow">Our Services</p><h2 id="svc-title">Comprehensive Infrastructure Solutions</h2></div>
+        <p>Four specialist disciplines, planned together so detection, monitoring, building operations and energy work as one connected infrastructure.</p>
+      </div>
+      <ServiceBento/>
+    </div>
+  </section>
+
+  <SystemsMarquee/>
+
+  <!-- UNIFIED APPROACH -->
+  <section class="unified section" aria-labelledby="unified-title">
+    <div class="container unified__grid">
+      <div class="unified__sticky">
+        <p class="eyebrow">A Unified Approach</p>
+        <h2 id="unified-title">Integrated Systems for Modern Buildings</h2>
+        <p>Techinfra brings together building safety, surveillance, communication, automation and renewable energy solutions within a connected infrastructure approach.</p>
+        <div class="diagram" aria-hidden="true">
+          <div class="diagram__model"><Img name="building-model" sizes="(max-width: 760px) 70vw, 30vw" alt=""/></div>
+          {nodes.map(([icon, label, color], i) => <span class={'diagram__node diagram__node--' + i} style={`--accent:${color};--i:${i}`}><span class="diagram__icon"><Icon name={icon} size={20}/></span><span class="diagram__label">{label}</span></span>)}
+        </div>
+      </div>
+      <ol class="steps">
+        {approach.map(([h, p], i) => (
+          <li class="step reveal" style={`--i:${i}`}>
+            <span class="step__num num">0{i + 1}</span>
+            <div><h3>{h}</h3><p>{p}</p></div>
+          </li>
+        ))}
+        <li class="steps__cta reveal"><Button href="/about-us/">Know More About Us</Button></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- SECTORS -->
+  <section class="sectors-home section section--navy" aria-labelledby="sectors-title">
+    <div class="container-wide">
+      <div class="section-head section-head--light reveal">
+        <div><p class="eyebrow eyebrow--light">Our Key Sectors</p><h2 id="sectors-title">Serving Diverse Industry Sectors</h2></div>
+        <p>The use of a building shapes its safety, security, communication and energy requirements. Explore how we plan for each.</p>
+      </div>
+      <SectorSlider/>
+    </div>
+  </section>
+
+  <!-- WHY TECHINFRA -->
+  <section class="why section" aria-labelledby="why-title">
+    <div class="container why__grid">
+      <figure class="why__media reveal">
+        <Img name="team-site" sizes="(max-width: 760px) 100vw, 40vw"/>
+        <figcaption class="why__badge"><span class="why__badge-icon"><Icon name="shield" size={22}/></span><span>Safety-focused, integrated and future-ready infrastructure</span></figcaption>
+      </figure>
+      <div class="why__copy">
+        <p class="eyebrow reveal">Why Techinfra</p>
+        <h2 id="why-title" class="reveal">A Reliable Partner for Integrated Infrastructure</h2>
+        <p class="reveal">A security team needs visibility at an entrance. A facilities team needs to understand plant conditions. A seminar hall needs clear sound. We consider these needs in the context of the building they share.</p>
+        <ul class="strengths">
+          {strengths.map(([icon, h, p], i) => <li class="reveal" style={`--i:${i}`}><span class="strengths__icon"><Icon name={icon} size={22}/></span><div><h3>{h}</h3><p>{p}</p></div></li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="gallery-home section section--deep" aria-labelledby="gallery-title" data-slider>
+    <div class="container-wide gallery-home__head">
+      <div class="reveal"><p class="eyebrow eyebrow--light">Solutions Gallery</p><h2 id="gallery-title">Solutions in Action</h2><p>Explore the technologies and systems behind modern infrastructure.</p></div>
+      <div class="slider-ctrl">
+        <button type="button" data-prev aria-label="Previous images"><Icon name="prev" size={20}/></button>
+        <button type="button" data-next aria-label="Next images"><Icon name="next" size={20}/></button>
+        <Button href="/projects/" tone="ghost" size="sm">View Gallery</Button>
+      </div>
+    </div>
+    <div class="gallery-track" data-track>
+      {gallery.map((g) => (
+        <a class="g-card" href={'/projects/#' + g.image}>
+          <Img name={g.image} sizes="(max-width: 760px) 78vw, 26vw"/>
+          <span class="g-card__body"><small>{g.category}</small><strong>{g.title}</strong></span>
+          <span class="g-card__go"><Icon name="external" size={18}/></span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <CTA/>
+</Layout>

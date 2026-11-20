@@ -1,0 +1,22 @@
+---
+import { services, servicePath } from '../data/site';
+import Img from './Img.astro';
+import Icon from './Icon.astro';
+---
+<div class="bento">
+  {services.map((s, i) => (
+    <a class={'bento__card bento__card--' + i + ' reveal'} href={servicePath(s)} style={`--accent:${s.color};--i:${i}`}>
+      <div class="bento__media"><Img name={s.heroImage} sizes={i === 0 || i === 3 ? '(max-width: 760px) 100vw, 58vw' : '(max-width: 760px) 100vw, 42vw'}/></div>
+      <div class="bento__body">
+        <span class="bento__icon"><Icon name={s.icon} size={24}/></span>
+        <h3>{s.name}</h3>
+        <p>{s.intro}</p>
+        <ul class="bento__chips">
+          {s.scope.slice(0, 4).map(([label]) => <li>{label}</li>)}
+          {s.scope.length > 4 && <li class="bento__more">+{s.scope.length - 4} more</li>}
+        </ul>
+        <span class="bento__go">Explore service <Icon name="arrow" size={17}/></span>
+      </div>
+    </a>
+  ))}
+</div>

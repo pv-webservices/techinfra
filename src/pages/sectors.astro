@@ -1,0 +1,45 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import Button from '../components/Button.astro';
+import CTA from '../components/CTA.astro';
+import { sectors, services, servicePath, whatsapp } from '../data/site';
+const crumbs = [['Sectors', '/sectors/']];
+---
+<Layout title="Sectors We Serve | Techinfra" description="Discover infrastructure applications for government, corporate, industrial, hospitality, commercial and institutional facilities." image="hero-dusk-1536" crumbs={crumbs}>
+  <PageHero tag="Our Key Sectors" title="Serving Diverse Industry Sectors" text="Explore how the use of a building shapes its safety, security, communications and energy requirements." mosaic={sectors.map((s) => s.image)} crumbs={crumbs}>
+    <Button href="/contact-us/">Discuss Your Sector</Button>
+  </PageHero>
+
+  <nav class="jump" aria-label="Jump to a sector">
+    <div class="container jump__in">
+      {sectors.map((s) => <a href={'#' + s.slug}><Icon name={s.icon} size={18}/>{s.name}</a>)}
+    </div>
+  </nav>
+
+  <div class="container rows">
+    {sectors.map((s, i) => (
+      <section class="row" id={s.slug} aria-labelledby={s.slug + '-title'}>
+        <div class="row__media reveal">
+          <Img name={s.image} sizes="(max-width: 860px) 100vw, 50vw"/>
+          <span class="row__index num">0{i + 1}</span>
+        </div>
+        <div class="row__body reveal">
+          <span class="row__icon row__icon--navy"><Icon name={s.icon} size={24}/></span>
+          <h2 id={s.slug + '-title'}>{s.name}</h2>
+          <p class="row__lead">{s.text}</p>
+          <div class="spaces"><h3>Spaces to consider</h3><p>{s.focus}.</p></div>
+          <h3 class="row__sub">Relevant services</h3>
+          <div class="svc-links">
+            {s.services.map((n) => <a href={servicePath(services[n])} style={`--accent:${services[n].color}`}><span><Icon name={services[n].icon} size={18}/></span>{services[n].name}<Icon name="next" size={16}/></a>)}
+          </div>
+          <div class="row__actions"><Button href={whatsapp('requirements for a ' + s.name.toLowerCase() + ' facility')} tone="link" icon="whatsapp">Discuss this sector on WhatsApp</Button></div>
+        </div>
+      </section>
+    ))}
+  </div>
+
+  <CTA heading="Discuss the Requirements of Your Sector"/>
+</Layout>

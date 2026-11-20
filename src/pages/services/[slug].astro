@@ -1,0 +1,90 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Img from '../../components/Img.astro';
+import Icon from '../../components/Icon.astro';
+import Button from '../../components/Button.astro';
+import CTA from '../../components/CTA.astro';
+import { services, servicePath, sectors, whatsapp, company } from '../../data/site';
+export function getStaticPaths() { return services.map((service) => ({ params:{ slug:service.slug }, props:{ service } })); }
+const { service:s } = Astro.props;
+const index = services.indexOf(s);
+const crumbs = [['Services', '/services/'], [s.name, servicePath(s)]];
+const relevantSectors = sectors.filter((sec) => sec.services.includes(index));
+const others = services.filter((o) => o.slug !== s.slug);
+---
+<Layout title={s.name + ' | Techinfra'} description={s.intro} image={s.heroImage + '-1536'} crumbs={crumbs} service={s.name}>
+  <PageHero title={s.hero} tag={s.name} text={s.intro} image={s.heroImage} accent={s.color} crumbs={crumbs}>
+    <Button href={whatsapp(s.name.toLowerCase())} tone="whatsapp" icon="whatsapp">Enquire on WhatsApp</Button>
+    <Button href={'tel:' + company.dial} tone="ghost" icon="phone">Call {company.phone}</Button>
+  </PageHero>
+
+  <section class="section" style={`--accent:${s.color}`}>
+    <div class="container">
+      <div class="section-head reveal">
+        <div><p class="eyebrow">Scope of Solutions</p><h2>What {s.label} covers</h2></div>
+        <p>{s.scope.length} specialist {s.scope.length === 1 ? 'system' : 'systems'} planned around the spaces, occupants and operators of your facility.</p>
+      </div>
+      <div class:list={['scope', { 'scope--many': s.scope.length > 4 }]}>
+        {s.scope.map(([h, p, icon], i) => (
+          <article class="scope__item reveal" style={`--i:${i % 3}`}>
+            <div class="scope__top"><span class="scope__icon"><Icon name={icon} size={24}/></span><span class="scope__num num">{String(i + 1).padStart(2, '0')}</span></div>
+            <h3>{h}</h3><p>{p}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint" style={`--accent:${s.color}`}>
+    <div class="container apply">
+      <figure class="apply__media reveal"><Img name={s.detailImage} sizes="(max-width: 860px) 100vw, 50vw"/></figure>
+      <div class="apply__body reveal">
+        <p class="eyebrow">Facility Applications</p>
+        <h2>Planning for your site</h2>
+        <p class="apply__lead">{s.context}</p>
+        <div class="share">
+          <h3>What to share with us</h3>
+          <ul>{s.share.map((item) => <li><span><Icon name="check" size={16}/></span>{item}</li>)}</ul>
+        </div>
+        <div class="apply__actions">
+          <Button href={whatsapp(s.name.toLowerCase())} tone="whatsapp" icon="whatsapp">Enquire on WhatsApp</Button>
+          <Button href="/contact-us/" tone="outline">Send an Enquiry</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {relevantSectors.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <div class="section-head reveal"><div><p class="eyebrow">Where it applies</p><h2>Sectors that rely on {s.label}</h2></div></div>
+        <div class="applies">
+          {relevantSectors.map((sec, i) => (
+            <a class="applies__card reveal" href={'/sectors/#' + sec.slug} style={`--i:${i}`}>
+              <Img name={sec.image} sizes="(max-width: 760px) 100vw, 33vw"/>
+              <span class="applies__body"><span class="applies__icon"><Icon name={sec.icon} size={20}/></span><strong>{sec.name}</strong><small>{sec.focus}</small></span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section section--tint related">
+    <div class="container">
+      <div class="section-head reveal"><div><p class="eyebrow">Explore more</p><h2>Related services</h2></div></div>
+      <div class="related__grid">
+        {others.map((o, i) => (
+          <a class="related__card reveal" href={servicePath(o)} style={`--accent:${o.color};--i:${i}`}>
+            <span class="related__icon"><Icon name={o.icon} size={22}/></span>
+            <span><strong>{o.name}</strong><small>{o.short}</small></span>
+            <span class="related__go"><Icon name="arrow" size={18}/></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTA heading="Discuss Your Facility’s Requirements" topic={s.name.toLowerCase()}/>
+</Layout>

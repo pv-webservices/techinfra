@@ -1,0 +1,12 @@
+---
+import { allSystems } from '../data/site';
+import Icon from './Icon.astro';
+---
+<section class="marquee" aria-label="Systems we deliver">
+  <ul class="marquee__list">
+    {allSystems.map((s) => <li style={`--accent:${s.color}`}><Icon name={s.icon} size={20}/>{s.name}</li>)}
+  </ul>
+  <ul class="marquee__list marquee__list--clone" aria-hidden="true">
+    {allSystems.map((s) => <li style={`--accent:${s.color}`}><Icon name={s.icon} size={20}/>{s.name}</li>)}
+  </ul>
+</section>

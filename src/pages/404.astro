@@ -1,0 +1,19 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import { services, servicePath } from '../data/site';
+---
+<Layout title="Page Not Found | Techinfra" description="Return to the Techinfra homepage or contact the company for help finding an infrastructure solution." error>
+  <section class="error-page phero">
+    <div class="phero__grid-bg" aria-hidden="true"></div>
+    <div class="container error-page__in">
+      <p class="error-page__code num" aria-hidden="true">404</p>
+      <p class="eyebrow eyebrow--light">Error 404</p>
+      <h1>Page not found</h1>
+      <p class="phero__lead">The address may have changed, or the page may no longer be available.</p>
+      <div class="phero__actions"><Button href="/">Back to Homepage</Button><Button href="/contact-us/" tone="ghost">Contact Us</Button></div>
+      <div class="error-page__links">{services.map((s) => <a href={servicePath(s)}><Icon name={s.icon} size={18}/>{s.label}</a>)}</div>
+    </div>
+  </section>
+</Layout>

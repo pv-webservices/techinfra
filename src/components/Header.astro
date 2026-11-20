@@ -1,0 +1,165 @@
+---
+import { company, nav, services, servicePath, whatsapp, mailto } from '../data/site';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+const path = Astro.url.pathname;
+const isCurrent = (href:string) => href === '/' ? path === '/' : path.startsWith(href);
+---
+<div class="topbar">
+  <div class="container topbar__in">
+    <p>Fire Safety · Security · Building Technology · Renewable Energy</p>
+    <div class="topbar__links">
+      <a href={'tel:' + company.dial}><Icon name="phone" size={14}/><span class="num">{company.phone}</span></a>
+      <a href={mailto()}><Icon name="mail" size={14}/>{company.email}</a>
+    </div>
+  </div>
+</div>
+
+<header class="mast" data-mast>
+  <div class="container mast__in">
+    <a class="brand" href="/" aria-label="Techinfra Integrated Solutions — home">
+      <img src="/media/techinfra-logo-hd.webp" width="576" height="246" alt="Techinfra Integrated Solutions Pvt. Ltd." fetchpriority="high"/>
+    </a>
+
+    <nav class="nav" aria-label="Main navigation">
+      <ul class="nav__list">
+        {nav.map(([label, href]) => href === '/services/' ? (
+          <li class:list={['nav__item nav__item--menu', { 'is-current': isCurrent(href) }]} data-dd>
+            <a class="nav__link" href={href} aria-current={path === href ? 'page' : undefined}>{label}</a>
+            <button class="nav__caret" type="button" aria-expanded="false" aria-controls="dd-services" aria-label="Show service categories"><Icon name="down" size={16}/></button>
+            <div class="dd" id="dd-services">
+              <div class="dd__grid">
+                {services.map((s) => (
+                  <a class="dd__link" href={servicePath(s)} style={`--accent:${s.color}`} aria-current={path === servicePath(s) ? 'page' : undefined}>
+                    <span class="dd__icon"><Icon name={s.icon} size={20}/></span>
+                    <span><strong>{s.name}</strong><small>{s.short}</small></span>
+                  </a>
+                ))}
+              </div>
+              <div class="dd__foot">
+                <span>Not sure which system you need?</span>
+                <a href="/services/">View all services <Icon name="arrow" size={15}/></a>
+              </div>
+            </div>
+          </li>
+        ) : (
+          <li class:list={['nav__item', { 'is-current': isCurrent(href) }]}>
+            <a class="nav__link" href={href} aria-current={path === href ? 'page' : undefined}>{label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="mast__actions">
+      <a class="mast__call" href={'tel:' + company.dial} aria-label={'Call ' + company.phone}>
+        <span class="mast__call-icon"><Icon name="phone" size={18}/></span>
+        <span class="mast__call-text"><small>Call us</small><span class="num">{company.phone}</span></span>
+      </a>
+      <Button href="/contact-us/" class="mast__cta" size="sm">Get in Touch</Button>
+      <button class="burger" type="button" aria-controls="drawer" aria-expanded="false" aria-label="Open menu" data-drawer-open>
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" data-drawer aria-hidden="true" inert>
+  <div class="drawer__scrim" data-drawer-close></div>
+  <aside class="drawer__panel" role="dialog" aria-modal="true" aria-label="Site menu">
+    <div class="drawer__head">
+      <a class="drawer__brand" href="/" aria-label="Techinfra home"><img src="/media/techinfra-logo-hd.webp" width="576" height="246" alt="Techinfra Integrated Solutions Pvt. Ltd." loading="lazy"/></a>
+      <button class="drawer__close" type="button" aria-label="Close menu" data-drawer-close><Icon name="close" size={22}/></button>
+    </div>
+    <nav class="drawer__nav" aria-label="Mobile navigation">
+      <ul>
+        {nav.map(([label, href]) => href === '/services/' ? (
+          <li class="drawer__group">
+            <div class="drawer__row">
+              <a href={href} class:list={['drawer__link', { 'is-current': isCurrent(href) }]}>{label}</a>
+              <button class="drawer__toggle" type="button" aria-expanded="false" aria-controls="drawer-services" aria-label="Show service categories"><Icon name="down" size={18}/></button>
+            </div>
+            <ul class="drawer__sub" id="drawer-services" hidden>
+              {services.map((s) => (
+                <li><a href={servicePath(s)} style={`--accent:${s.color}`}><span class="drawer__sub-icon"><Icon name={s.icon} size={18}/></span>{s.name}</a></li>
+              ))}
+            </ul>
+          </li>
+        ) : (
+          <li><a href={href} class:list={['drawer__link', { 'is-current': isCurrent(href) }]} aria-current={path === href ? 'page' : undefined}>{label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <div class="drawer__contact">
+      <p class="drawer__label">Talk to Techinfra</p>
+      <a class="drawer__contact-row" href={'tel:' + company.dial}><span><Icon name="phone" size={18}/></span><span class="num">{company.phone}</span></a>
+      <a class="drawer__contact-row" href={mailto()}><span><Icon name="mail" size={18}/></span>{company.email}</a>
+      <div class="drawer__ctas">
+        <Button href="/contact-us/" size="md">Get in Touch</Button>
+        <Button href={whatsapp()} tone="whatsapp" icon="whatsapp" size="md">WhatsApp</Button>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script>
+  const root = document.documentElement;
+  const mast = document.querySelector<HTMLElement>('[data-mast]')!;
+
+  // Sticky header shadow / compact state.
+  const onScroll = () => mast.classList.toggle('is-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Desktop services dropdown: hover intent on fine pointers, click/keyboard everywhere.
+  document.querySelectorAll<HTMLElement>('[data-dd]').forEach((item) => {
+    const caret = item.querySelector<HTMLButtonElement>('.nav__caret')!;
+    let timer = 0;
+    const set = (open: boolean) => { item.classList.toggle('is-open', open); caret.setAttribute('aria-expanded', String(open)); };
+    const fine = matchMedia('(hover: hover) and (pointer: fine)');
+    item.addEventListener('mouseenter', () => { if (!fine.matches) return; clearTimeout(timer); set(true); });
+    item.addEventListener('mouseleave', () => { if (!fine.matches) return; timer = window.setTimeout(() => set(false), 140); });
+    caret.addEventListener('click', () => set(!item.classList.contains('is-open')));
+    item.addEventListener('focusout', (e) => { if (!item.contains(e.relatedTarget as Node)) set(false); });
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && item.classList.contains('is-open')) { set(false); caret.focus(); }
+      if (e.key === 'ArrowDown' && e.target === caret) { e.preventDefault(); set(true); item.querySelector<HTMLAnchorElement>('.dd a')?.focus(); }
+    });
+    document.addEventListener('click', (e) => { if (!item.contains(e.target as Node)) set(false); });
+  });
+
+  // Right-side mobile drawer.
+  const drawer = document.querySelector<HTMLElement>('[data-drawer]')!;
+  const opener = document.querySelector<HTMLButtonElement>('[data-drawer-open]')!;
+  const panel = drawer.querySelector<HTMLElement>('.drawer__panel')!;
+  const setDrawer = (open: boolean) => {
+    drawer.classList.toggle('is-open', open);
+    root.classList.toggle('drawer-open', open);
+    drawer.toggleAttribute('inert', !open);
+    drawer.setAttribute('aria-hidden', String(!open));
+    opener.setAttribute('aria-expanded', String(open));
+    if (open) panel.querySelector<HTMLElement>('.drawer__close')?.focus({ preventScroll: true });
+    else opener.focus({ preventScroll: true });
+  };
+  opener.addEventListener('click', () => setDrawer(true));
+  drawer.querySelectorAll('[data-drawer-close]').forEach((el) => el.addEventListener('click', () => setDrawer(false)));
+  drawer.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setDrawer(false)));
+  document.addEventListener('keydown', (e) => {
+    if (!drawer.classList.contains('is-open')) return;
+    if (e.key === 'Escape') setDrawer(false);
+    if (e.key === 'Tab') { // keep focus inside the open drawer
+      const f = Array.from(panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')).filter((el) => el.offsetParent !== null);
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  matchMedia('(min-width: 1101px)').addEventListener('change', (e) => { if (e.matches && drawer.classList.contains('is-open')) setDrawer(false); });
+
+  const subToggle = drawer.querySelector<HTMLButtonElement>('.drawer__toggle');
+  const sub = drawer.querySelector<HTMLElement>('#drawer-services');
+  subToggle?.addEventListener('click', () => {
+    const open = subToggle.getAttribute('aria-expanded') !== 'true';
+    subToggle.setAttribute('aria-expanded', String(open));
+    if (sub) sub.hidden = !open;
+  });
+</script>
